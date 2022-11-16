@@ -2,6 +2,12 @@
 
 Add a nickname to the player(nametag) in minetest.
 
+grant your nickname privilege first.
+
+```
+/grantme nickname
+```
+
 ## Chat commands
 
 ### `/nickname[ your_nickname[, player_name]]`
