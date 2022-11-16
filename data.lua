@@ -18,7 +18,8 @@ local function getNickInfo(playerName)
         result.text = text .. "(" .. playerName .. ")"
       end
     else
-      result = minetest.get_nametag_attributes(playerName)
+      local player = minetest.get_player_by_name(playerName)
+      result = player:get_nametag_attributes()
     end
   end
   return result
