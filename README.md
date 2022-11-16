@@ -22,3 +22,8 @@ Only You can specify the player_name if you have the `server` privilege
 Get or set the nickname's background color.
 
 Only You can specify the player_name if you have the `server` privilege
+
+
+## LICENSE
+
+MIT
