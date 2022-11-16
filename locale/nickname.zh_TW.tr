@@ -1,0 +1,20 @@
+# textdomain: nickname
+allow to change nickname=允許改變昵稱
+get/set the nickname <newNickName> [,playerName]=獲取或設定昵稱 <新昵稱>, [玩家名稱]
+No nickname provided.=冇有昵稱
+Your nickname is @1=你的昵稱是:@1
+The '(' char is not allowed in nickname.=昵稱中不允許'('字符
+This requires the "server" privilege.=需要"server"權限
+Set @1's nickname to @2 successfully.=設定@1的昵稱為"@2",成功.
+Set @1's nickname to @2 failed.=設定@1的昵稱"@2"失敗.
+get/set the nickname color <newColor> [,playerName]=獲取或設定昵稱顔色 <color>, [玩家名稱]
+No color provided.=冇有顔色.
+Your nickname color is @1=你的昵稱顔色是:@1
+Set @1's nickname color to @2 successfully.=設定@1的昵稱的顔色為"@2",成功.
+Set @1's nickname color to @2 failed.=設定@1的昵稱的顔色為"@2",失敗.
+get/set the nickname background color <newColor> [,playerName]=獲取或設定昵稱背景顔色 <color>, [玩家名稱]
+No bgcolor provided.=冇有背景顔色.
+Your nickname bgcolor is @1=你的昵稱背景顔色是:@1
+Set @1's nickname bgcolor to @2 successfully.=設定@1的昵稱的背景顔色為"@2",成功.
+Set @1's nickname bgcolor to @2 failed.=設定@1的昵稱的背景顔色為"@2",失敗.
+

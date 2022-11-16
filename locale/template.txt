@@ -1,0 +1,19 @@
+# textdomain: nickname
+allow to change nickname=
+get/set the nickname <newNickName> [,playerName]=
+No nickname provided.=
+Your nickname is @1=
+The '(' char is not allowed in nickname.=
+This requires the "server" privilege.=
+Set @1's nickname to @2 successfully.=
+Set @1's nickname to @2 failed.=
+get/set the nickname color <newColor> [,playerName]=
+No color provided.=
+Your nickname color is @1=
+Set @1's nickname color to @2 successfully.=
+Set @1's nickname color to @2 failed.=
+get/set the nickname background color <newColor> [,playerName]=
+No bgcolor provided.=
+Your nickname bgcolor is @1=
+Set @1's nickname bgcolor to @2 successfully.=
+Set @1's nickname bgcolor to @2 failed.=
