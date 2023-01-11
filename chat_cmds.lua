@@ -8,7 +8,7 @@ end
 
 minetest.register_privilege("nickname", {
   description = S("allow to change nickname"),
-  give_to_singleplayer = false, --< DO NOT defaults to singleplayer
+  -- give_to_singleplayer = false, --< DO NOT defaults to singleplayer
   give_to_admin = true,
 })
 
