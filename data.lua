@@ -6,11 +6,33 @@ local minetest, yaml, DIR_DELIM, nickname
 local DATA_PATH = nickname.DATA_PATH
 local cache = {}
 
+local function isFileExists(filename)
+  local f = io.open(filename, 'r')
+  if (f) then
+    f:close()
+    return true
+  end
+end
+
+local function readNickFromConf(filename)
+  filename = filename .. ".conf"
+  local result = Settings(filename)
+  if result:get('text') ~= nil then
+    return result:to_table()
+  end
+end
+
+local function readNickFromYaml(filename)
+  filename = filename .. ".yml"
+  return yaml.readFile(filename)
+end
+
 local function getNickInfo(playerName)
   local result = cache[playerName]
   if not result then
-    local filename = DATA_PATH .. DIR_DELIM .. playerName .. ".yml"
-    result = yaml.readFile(filename)
+    local filename = DATA_PATH .. DIR_DELIM .. playerName
+    result = readNickFromConf(filename)
+    if (result == nil) then result = readNickFromYaml(filename) end
     cache[playerName] = result or {}
     if result then
       local text = result.text
@@ -36,14 +58,29 @@ end
 nickname.get = getNickname
 
 local function setNickName(playerName, nickName, color, bgcolor)
-  local filename = DATA_PATH .. DIR_DELIM .. playerName .. ".yml"
   local content = cache[playerName] or {}
   if color ~= nil then content.color = color end
   if bgcolor ~= nil then content.bgcolor = bgcolor end
   if nickName ~= nil then content.text = nickName .. "(" .. playerName .. ")" end
   local player = minetest.get_player_by_name(playerName)
   player:set_nametag_attributes(content)
-  return yaml.writeFile(filename, content)
+
+  local filename = DATA_PATH .. DIR_DELIM .. playerName
+  local isConf = isFileExists(filename .. '.conf')
+  if (isConf) then
+    local vSettings = Settings(filename .. '.conf')
+    local result
+    for k,v in pairs(content) do
+      if v ~= nil then
+        vSettings:set(k,v)
+        result = true
+      end
+    end
+    if result then vSettings:write() end
+    return result
+  else
+    return yaml.writeFile(filename .. '.yml', content)
+  end
 end
 nickname.set = setNickName
 
