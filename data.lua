@@ -41,7 +41,7 @@ local function getNickInfo(playerName)
       end
     else
       local player = minetest.get_player_by_name(playerName)
-      result = player:get_nametag_attributes()
+      if player ~= nil then result = player:get_nametag_attributes() end
     end
   end
   return result
@@ -63,7 +63,7 @@ local function setNickName(playerName, nickName, color, bgcolor)
   if bgcolor ~= nil then content.bgcolor = bgcolor end
   if nickName ~= nil then content.text = nickName .. "(" .. playerName .. ")" end
   local player = minetest.get_player_by_name(playerName)
-  player:set_nametag_attributes(content)
+  if player ~= nil then player:set_nametag_attributes(content) end
 
   local filename = DATA_PATH .. DIR_DELIM .. playerName
   local isConf = isFileExists(filename .. '.conf')
