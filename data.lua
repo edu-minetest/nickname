@@ -3,6 +3,7 @@ local minetest, yaml, DIR_DELIM, nickname
     = minetest, yaml, DIR_DELIM, nickname
 -- LUALOCALS > ---------------------------------------------------------
 
+local S = nickname.get_translator
 local DATA_PATH = nickname.DATA_PATH
 local cache = {}
 
@@ -41,7 +42,8 @@ local function getNickInfo(playerName)
       end
     else
       local player = minetest.get_player_by_name(playerName)
-      if player ~= nil then result = player:get_nametag_attributes() end
+      if player == nil then return false, S('No player named "@1" exists', playerName) end
+      result = player:get_nametag_attributes()
     end
   end
   return result
@@ -49,32 +51,38 @@ end
 nickname.getInfo = getNickInfo
 
 local function getNickname(playerName)
-  local result = getNickInfo(playerName)
+  local result, msg = getNickInfo(playerName)
   if type(result) == "table" then result = result.text end
-  if result and #result then
-    return result
-  end
+  return result, msg
 end
 nickname.get = getNickname
 
-local function setNickName(playerName, nickName, color, bgcolor)
-  local content = cache[playerName] or {}
-  if color ~= nil then content.color = color end
-  if bgcolor ~= nil then content.bgcolor = bgcolor end
-  if nickName ~= nil then content.text = nickName .. "(" .. playerName .. ")" end
+local function setNicknameInfo(playerName, info)
+  if info == nil then return end
+  local content = cache[playerName]
+  if content then
+    for k, v in pairs(info) do
+      if k == 'text' or k == 'color' or k == 'bgcolor' then
+        if k == 'text' then v = v .. "(" .. playerName .. ")" end
+        content[k] = v
+      end
+    end
+  else
+    content = info
+  end
+
   local player = minetest.get_player_by_name(playerName)
   if player ~= nil then player:set_nametag_attributes(content) end
 
+  -- can write offline player
   local filename = DATA_PATH .. DIR_DELIM .. playerName
   local isConf = isFileExists(filename .. '.conf')
   if (isConf) then
     local vSettings = Settings(filename .. '.conf')
     local result
     for k,v in pairs(content) do
-      if v ~= nil then
-        vSettings:set(k,v)
-        result = true
-      end
+      vSettings:set(k,v)
+      result = true
     end
     if result then vSettings:write() end
     return result
@@ -82,10 +90,12 @@ local function setNickName(playerName, nickName, color, bgcolor)
     return yaml.writeFile(filename .. '.yml', content)
   end
 end
-nickname.set = setNickName
+nickname.set = setNicknameInfo
+nickname.setInfo = setNicknameInfo
 
 return {
   get = getNickname,
   getInfo = getNickInfo,
-  set = setNickName,
+  set = getNickInfo,
+  setInfo = setNicknameInfo,
 }

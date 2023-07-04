@@ -2,7 +2,7 @@
 
 Add a nickname to the player(nametag) in minetest.
 
-grant your nickname privilege first.
+grant your nickname privilege first. now it's the default to common user.
 
 ```
 /grantme nickname
@@ -14,20 +14,19 @@ grant your nickname privilege first.
 
 Get or set the nickname.
 
-Only You can specify the player_name if you have the `server` privilege
-
+Only You can specify the player_name if you have the `server` privilege. If the value is "?", which means show the `player_name`'s nickname.
 
 ### `/nickname_color[ color[, player_name]]`
 
 Get or set the nickname's color.
 
-Only You can specify the player_name if you have the `server` privilege
+Only You can specify the player_name if you have the `server` privilege. If the value is "?", which means show the `player_name`'s nickname color.
 
 ### `/nickname_bgcolor[ color[, player_name]]`
 
 Get or set the nickname's background color.
 
-Only You can specify the player_name if you have the `server` privilege
+Only You can specify the player_name if you have the `server` privilege. If the value is "?", which means show the `player_name`'s nickname bgcolor.
 
 ## Color
 

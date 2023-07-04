@@ -6,6 +6,28 @@ local function trim(s)
   return string.gsub(s, "^%s*(.-)%s*$", "%1") --trim spaces
 end
 
+local displayNames = {text=S('nickname'), color=S('color'), bgcolor=S('bgcolor')}
+
+local function do_nickInfo(playerName, name, value)
+  local msg
+  local displayName = displayNames[name]
+  if value == '?' then
+    value, msg = nickname.getInfo(playerName)
+    if value and value[name] then msg = S("@1's @2 is @3", playerName, displayName, dump(value[name])) end
+    if value == false then msg = msg end
+    return value ~= false, msg
+  end
+  local info = {}
+  info[name] = value
+  local result = nickname.setInfo(playerName, info)
+  if result then
+    msg = S("Set @1's @2 to @3 successfully.", playerName, displayName, value)
+  else
+    msg = S("Set @1's @2 to @3 failed.", playerName, displayName, value)
+  end
+  return result, msg
+end
+
 minetest.register_privilege("nickname", {
   description = S("allow to change nickname"),
   -- give_to_singleplayer = false, --< DO NOT defaults to singleplayer
@@ -20,7 +42,6 @@ minetest.register_chatcommand("nickname", {
   func = function(name, param)
     local parts = param:split(",")
     local len = #parts
-    local result
     local msg = S("No nickname provided.")
     if len == 0 then
       name = nickname.get(name)
@@ -38,14 +59,7 @@ minetest.register_chatcommand("nickname", {
         return false, S("This requires the \"server\" privilege.")
       end
     end
-    result = nickname.set(name, vNickname)
-    if result then
-      msg = S("Set @1's nickname to @2 successfully.", name, vNickname)
-    else
-      msg = S("Set @1's nickname to @2 failed.", name, vNickname)
-    end
-
-    return result, msg
+    return do_nickInfo(name, 'text', vNickname)
   end,
 })
 
@@ -57,7 +71,6 @@ minetest.register_chatcommand("nickname_color", {
   func = function(name, param)
     local parts = param:split(",")
     local len = #parts
-    local result
     local msg = S("No color provided.")
     if len == 0 then
       local nametag = nickname.getInfo(name)
@@ -76,14 +89,7 @@ minetest.register_chatcommand("nickname_color", {
         return false, S("This requires the \"server\" privilege.")
       end
     end
-    result = nickname.set(name, nil, color)
-    if result then
-      msg = S("Set @1's nickname color to @2 successfully.", name, color)
-    else
-      msg = S("Set @1's nickname color to @2 failed.", name, color)
-    end
-
-    return result, msg
+    return do_nickInfo(name, 'color', color)
   end,
 })
 
@@ -95,7 +101,6 @@ minetest.register_chatcommand("nickname_bgcolor", {
   func = function(name, param)
     local parts = param:split(",")
     local len = #parts
-    local result
     local msg = S("No bgcolor provided.")
     if len == 0 then
       local nametag = nickname.getInfo(name)
@@ -113,13 +118,6 @@ minetest.register_chatcommand("nickname_bgcolor", {
         return false, S("This requires the \"server\" privilege.")
       end
     end
-    result = nickname.set(name, nil, nil, color)
-    if result then
-      msg = S("Set @1's nickname bgcolor to @2 successfully.", name, color)
-    else
-      msg = S("Set @1's nickname bgcolor to @2 failed.", name, color)
-    end
-    return result, msg
+    return do_nickInfo(name, 'bgcolor', color)
   end,
 })
-

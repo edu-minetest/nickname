@@ -1,20 +1,20 @@
 # textdomain: nickname
+nickname=昵称
+color=昵称颜色
+bgcolor=昵称背景颜色
+@1's @2 is @3=@1的@2是@3
+Set @1's @2 to @3 successfully.=已将@1的@2设置为@3
+Set @1's @2 to @3 failed.=设置@1的@2为@3失败
 allow to change nickname=允许改变昵称
 get/set the nickname <newNickName> [,playerName]=获取或设置昵称 <新昵称>, [玩家名称]
 No nickname provided.=没有昵称
 Your nickname is @1=你的昵称是:@1
 The '(' char is not allowed in nickname.=昵称中不允许'('字符
 This requires the "server" privilege.=需要"server"权限
-Set @1's nickname to @2 successfully.=设置@1的昵称为"@2",成功.
-Set @1's nickname to @2 failed.=设置@1的昵称"@2"失败.
 get/set the nickname color <newColor> [,playerName]=获取或设置昵称颜色 <color>, [玩家名称]
 No color provided.=没有颜色.
 Your nickname color is @1=你的昵称颜色是:@1
-Set @1's nickname color to @2 successfully.=设置@1的昵称的颜色为"@2",成功.
-Set @1's nickname color to @2 failed.=设置@1的昵称的颜色为"@2",失败.
 get/set the nickname background color <newColor> [,playerName]=获取或设置昵称背景颜色 <color>, [玩家名称]
 No bgcolor provided.=没有背景颜色.
 Your nickname bgcolor is @1=你的昵称背景颜色是:@1
-Set @1's nickname bgcolor to @2 successfully.=设置@1的昵称的背景颜色为"@2",成功.
-Set @1's nickname bgcolor to @2 failed.=设置@1的昵称的背景颜色为"@2",失败.
-
+No player named "@1" exists=玩家"@1"不存在或不在线
