@@ -76,19 +76,14 @@ local function setNicknameInfo(playerName, info)
 
   -- can write offline player
   local filename = DATA_PATH .. DIR_DELIM .. playerName
-  local isConf = isFileExists(filename .. '.conf')
-  if (isConf) then
-    local vSettings = Settings(filename .. '.conf')
-    local result
-    for k,v in pairs(content) do
-      vSettings:set(k,v)
-      result = true
-    end
-    if result then vSettings:write() end
-    return result
-  else
-    return yaml.writeFile(filename .. '.yml', content)
+  local vSettings = Settings(filename .. '.conf')
+  local result
+  for k,v in pairs(content) do
+    vSettings:set(k,v)
+    result = true
   end
+  if result then vSettings:write() end
+  return result
 end
 nickname.set = setNicknameInfo
 nickname.setInfo = setNicknameInfo
