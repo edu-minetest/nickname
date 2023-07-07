@@ -7,6 +7,7 @@ local S = nickname.get_translator
 local DATA_PATH = nickname.DATA_PATH
 local cache = {}
 
+--[[
 local function isFileExists(filename)
   local f = io.open(filename, 'r')
   if (f) then
@@ -14,6 +15,7 @@ local function isFileExists(filename)
     return true
   end
 end
+--]]
 
 local function readNickFromConf(filename)
   filename = filename .. ".conf"
@@ -35,18 +37,29 @@ local function getNickInfo(playerName)
     result = readNickFromConf(filename)
     if (result == nil) then result = readNickFromYaml(filename) end
     cache[playerName] = result or {}
-    if result then
-      local text = result.text
-      if text and not string.find(text, playerName) then
-        result.text = text .. "(" .. playerName .. ")"
-      end
-    else
+    if not result then
       local player = minetest.get_player_by_name(playerName)
       if player == nil then return false, S('No player named "@1" exists', playerName) end
       result = player:get_nametag_attributes()
+      cache[playerName] = result
+      if result and result.text then
+        local v = result.text
+        local pos = string.find(v, "[(]")
+        if pos then
+          v = v:sub(1, pos-1)
+          result.text = v
+        end
+      end
     end
   end
-  return result
+  if result then
+    local res = table.copy(result)
+    local text = res.text
+    if text and not string.find(text, playerName) then
+      res.text = text .. "(" .. playerName .. ")"
+    end
+    return res
+  end
 end
 nickname.getInfo = getNickInfo
 
@@ -63,34 +76,59 @@ local function setNicknameInfo(playerName, info)
   if content then
     for k, v in pairs(info) do
       if k == 'text' or k == 'color' or k == 'bgcolor' then
-        if k == 'text' then v = v .. "(" .. playerName .. ")" end
+        if k == 'bgcolor' and v == 'false' then v = false end
         content[k] = v
       end
     end
   else
     content = info
+    cache[playerName] = content
   end
 
-  local player = minetest.get_player_by_name(playerName)
-  if player ~= nil then player:set_nametag_attributes(content) end
+  if content.text and content.text ~= '' then
+    local v = content.text
+    local pos = string.find(v, "[(]")
+    if pos then
+      v = v:sub(1, pos-1)
+      content.text = v
+    end
+  end
 
   -- can write offline player
   local filename = DATA_PATH .. DIR_DELIM .. playerName
   local vSettings = Settings(filename .. '.conf')
   local result
   for k,v in pairs(content) do
-    vSettings:set(k,v)
-    result = true
+    if k == 'color' or k == 'bgcolor' then
+      if type(v) ~= 'string' and v ~= false then v = minetest.colorspec_to_colorstring(v) end
+    end
+    if v then
+      vSettings:set(k, v)
+      result = true
+    elseif v == false then
+      -- bgcolor could be false
+      vSettings:set_bool(k, v)
+    else
+      content[k] = nil
+    end
   end
   if result then vSettings:write() end
+
+  local player = minetest.get_player_by_name(playerName)
+  if player ~= nil then
+    local res = table.copy(content)
+    if res.text then res.text = res.text .. "(" .. playerName .. ")" end
+    player:set_nametag_attributes(res)
+  end
+
   return result
 end
-nickname.set = setNicknameInfo
+nickname.set = setNicknameInfo -- deprecated
 nickname.setInfo = setNicknameInfo
 
 return {
   get = getNickname,
   getInfo = getNickInfo,
-  set = getNickInfo,
+  set = getNickInfo, -- deprecated
   setInfo = setNicknameInfo,
 }
