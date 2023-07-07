@@ -50,7 +50,6 @@ minetest.register_chatcommand("nickname", {
     end
     local vNickname = trim(parts[1])
     if #vNickname == 0 then return false, msg end
-    if string.find(vNickname, "[(]") then return false, S("The '(' char is not allowed in nickname.") end
     local player = minetest.get_player_by_name(name)
     if len >= 2 and name ~= parts[2] then
       if minetest.check_player_privs(player, "server") then
